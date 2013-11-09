@@ -25,6 +25,7 @@
 		17EEF66617BAA6D6003233B5 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 17EEF66517BAA6D6003233B5 /* Default-568h@2x.png */; };
 		17EEF67417BAC0BC003233B5 /* MMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17EEF67317BAC0BC003233B5 /* MMViewController.m */; };
 		17EEF68317BB4452003233B5 /* MMGridCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 17EEF68217BB4452003233B5 /* MMGridCell.m */; };
+		D46CC34E182E633300F2E358 /* MBSpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = D46CC34D182E633300F2E358 /* MBSpreadsheetView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,8 @@
 		17EEF67317BAC0BC003233B5 /* MMViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMViewController.m; path = MMSpreadsheetView/MMViewController.m; sourceTree = "<group>"; };
 		17EEF68117BB4452003233B5 /* MMGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMGridCell.h; path = MMSpreadsheetView/MMGridCell.h; sourceTree = "<group>"; };
 		17EEF68217BB4452003233B5 /* MMGridCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMGridCell.m; path = MMSpreadsheetView/MMGridCell.m; sourceTree = "<group>"; };
+		D46CC34C182E633300F2E358 /* MBSpreadsheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBSpreadsheetView.h; path = ../MBSpreadsheetView/MBSpreadsheetView.h; sourceTree = "<group>"; };
+		D46CC34D182E633300F2E358 /* MBSpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBSpreadsheetView.m; path = ../MBSpreadsheetView/MBSpreadsheetView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +97,7 @@
 		17EEF64317BAA6D6003233B5 = {
 			isa = PBXGroup;
 			children = (
+				D46CC34F182E849B00F2E358 /* MBSpreadsheetView */,
 				17EEF65517BAA6D6003233B5 /* MMSpreadsheetView */,
 				1767375D17C6A83600DDFE2D /* Example */,
 				17EEF64E17BAA6D6003233B5 /* Frameworks */,
@@ -147,6 +151,15 @@
 			);
 			name = "Supporting Files";
 			path = MMSpreadsheetView;
+			sourceTree = "<group>";
+		};
+		D46CC34F182E849B00F2E358 /* MBSpreadsheetView */ = {
+			isa = PBXGroup;
+			children = (
+				D46CC34C182E633300F2E358 /* MBSpreadsheetView.h */,
+				D46CC34D182E633300F2E358 /* MBSpreadsheetView.m */,
+			);
+			name = MBSpreadsheetView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -225,6 +238,7 @@
 				1767376317C7E7A100DDFE2D /* MMGridLayout.m in Sources */,
 				1732D67317DA7C9C000C0659 /* MMTopRowCell.m in Sources */,
 				1732D67617DA7CB2000C0659 /* MMLeftColumnCell.m in Sources */,
+				D46CC34E182E633300F2E358 /* MBSpreadsheetView.m in Sources */,
 				17803AD417F1ED8500553B58 /* NSIndexPath+MMSpreadsheetView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

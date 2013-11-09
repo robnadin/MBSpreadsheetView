@@ -23,5 +23,6 @@
 @interface MMGridCell : UICollectionViewCell
 
 @property (nonatomic, strong) UILabel *textLabel;
+@property (nonatomic, strong) UIColor *selectedBackgroundColor;
 
 @end
