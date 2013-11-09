@@ -25,10 +25,17 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        CGRect rect = CGRectMake(20.0f, 0.0f, frame.size.width-40.0f, frame.size.height);
+        CGFloat contentInset = 6.0f;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            contentInset = 40.0f;
+        }
+        CGRect rect = CGRectMake(floor(contentInset / 2), 0.0f, frame.size.width - contentInset, frame.size.height);
         _textLabel = [[UILabel alloc] initWithFrame:rect];
         _textLabel.backgroundColor = [UIColor clearColor];
-        _textLabel.font = [UIFont boldSystemFontOfSize:21.0f];
+        _textLabel.font = [UIFont systemFontOfSize:11.0f];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            _textLabel.font = [UIFont boldSystemFontOfSize:21.0f];
+        }
         _textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.contentView addSubview:_textLabel];
     }

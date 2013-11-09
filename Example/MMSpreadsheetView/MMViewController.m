@@ -68,6 +68,21 @@
 
     // Add the spreadsheet view as a subview.
     [self.view addSubview:spreadSheetView];
+
+    spreadSheetView.translatesAutoresizingMaskIntoConstraints = NO;
+    id topLayoutGuide = self.topLayoutGuide;
+    id bottomLayoutGuide = self.bottomLayoutGuide;
+    NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(topLayoutGuide, spreadSheetView, bottomLayoutGuide);
+    [self.view addConstraints:
+     [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][spreadSheetView][bottomLayoutGuide]"
+                                             options:0
+                                             metrics:nil
+                                               views:viewsDictionary]];
+    [self.view addConstraints:
+     [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[spreadSheetView]|"
+                                             options:0
+                                             metrics:nil
+                                               views:viewsDictionary]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -78,10 +93,17 @@
 #pragma mark - MMSpreadsheetViewDataSource
 
 - (CGSize)spreadsheetView:(MMSpreadsheetView *)spreadsheetView sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat leftColumnWidth = 320.0f;
-    CGFloat topRowHeight = 150.0f;
-    CGFloat gridCellWidth = 124.0f;
-    CGFloat gridCellHeight = 103.0f;
+    CGFloat leftColumnWidth = 80.0f;
+    CGFloat topRowHeight = 47.0f;
+    CGFloat gridCellWidth = 80.0f;
+    CGFloat gridCellHeight = 40.0f;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        leftColumnWidth = 320.0f;
+        topRowHeight = 150.0f;
+        gridCellWidth = 124.0f;
+        gridCellHeight = 103.0f;
+    }
 
     // Upper left.
     if (indexPath.mmSpreadsheetRow == 0 && indexPath.mmSpreadsheetColumn == 0) {

@@ -37,6 +37,9 @@
         CGRect rect = CGRectMake(0.0f, 0.0f, frame.size.width, frame.size.height);
         _textLabel = [[UILabel alloc] initWithFrame:rect];
         _textLabel.backgroundColor = [UIColor clearColor];
+        if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+            _textLabel.font = [UIFont systemFontOfSize:11.0f];
+        }
         _textLabel.textAlignment = NSTextAlignmentCenter;
         _textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _normalTextColor = _textLabel.textColor;
