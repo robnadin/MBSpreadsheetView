@@ -98,6 +98,18 @@
 ///---------------------------------------
 
 /**
+ @param spreadsheetView The spreadsheet view object that is notifying you of the highlight change.
+ @param indexPath The index path of the cell that was highlighted.
+ */
+- (void)spreadsheetView:(MMSpreadsheetView *)spreadsheetView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath;
+
+/**
+ @param spreadsheetView The spreadsheet view object that is notifying you of the unhighlight change.
+ @param indexPath The index path of the cell that was unhighlighted.
+ */
+- (void)spreadsheetView:(MMSpreadsheetView *)spreadsheetView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath;
+
+/**
  Tells the delegate that the item at the specified index path was selected.
  
  @param spreadsheetView The spreadsheet view object that is notifying you of the selection change.

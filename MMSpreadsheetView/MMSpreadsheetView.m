@@ -722,6 +722,20 @@ const static NSUInteger MMScrollIndicatorTag = 12345;
 
 #pragma mark - UICollectionViewDelegate
 
+- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView indexPath:indexPath];
+    if ([self.delegate respondsToSelector:@selector(spreadsheetView:didHighlightItemAtIndexPath:)]) {
+        [self.delegate spreadsheetView:self didHighlightItemAtIndexPath:dataSourceIndexPath];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView indexPath:indexPath];
+    if ([self.delegate respondsToSelector:@selector(spreadsheetView:didUnhighlightItemAtIndexPath:)]) {
+        [self.delegate spreadsheetView:self didUnhighlightItemAtIndexPath:dataSourceIndexPath];
+    }
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.selectedItemCollectionView != nil) {
         if (collectionView == self.selectedItemCollectionView) {
