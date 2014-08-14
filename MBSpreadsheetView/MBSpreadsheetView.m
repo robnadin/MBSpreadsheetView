@@ -11,6 +11,7 @@
 
 @interface MMSpreadsheetView (Private) <UICollectionViewDataSource, UICollectionViewDelegate>
 
+@property (nonatomic, strong) UICollectionView *upperRightCollectionView;
 @property (nonatomic, strong) UICollectionView *lowerLeftCollectionView;
 @property (nonatomic, strong) UICollectionView *lowerRightCollectionView;
 
@@ -99,4 +100,51 @@
     }
 }
     
+#pragma mark - Content offset property getter
+
+- (CGPoint)contentOffset
+{
+    return self.lowerRightCollectionView.contentOffset;
+}
+
+#pragma mark - Content offset property setter
+
+- (void)setContentOffset:(CGPoint)contentOffset
+{
+    [self setContentOffset:contentOffset animated:NO];
+}
+
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated
+{
+    contentOffset.x = MIN(contentOffset.x, MAX(0, self.contentSize.width - CGRectGetWidth(self.bounds)));
+    contentOffset.y = MIN(contentOffset.y, MAX(0, self.contentSize.height - CGRectGetHeight(self.bounds)));
+
+    [self.lowerLeftCollectionView setContentOffset:CGPointMake(0, contentOffset.y) animated:animated];
+    [self.upperRightCollectionView setContentOffset:CGPointMake(contentOffset.x, 0) animated:animated];
+    [self.lowerRightCollectionView setContentOffset:contentOffset animated:animated];
+    [self setNeedsLayout];
+}
+
+#pragma mark - Content size property getter
+
+- (CGSize)contentSize
+{
+    if (self.lowerRightCollectionView.numberOfSections > 0) {
+        return self.lowerRightCollectionView.contentSize;
+    }
+
+    CGFloat width = 0;
+    CGFloat height = 0;
+
+    if (self.upperRightCollectionView.numberOfSections > 0) {
+        width = self.upperRightCollectionView.contentSize.width;
+    }
+
+    if (self.lowerLeftCollectionView.numberOfSections > 0) {
+        height = self.lowerLeftCollectionView.contentSize.height;
+    }
+
+    return CGSizeMake(width, height);
+}
+
 @end

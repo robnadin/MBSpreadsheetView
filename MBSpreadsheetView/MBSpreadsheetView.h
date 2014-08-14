@@ -8,10 +8,12 @@
 
 #import "MMSpreadsheetView.h"
 
+@class MBSpreadsheetView;
+
 @protocol MBSpreadsheetViewDelegate <MMSpreadsheetViewDelegate>
 @optional
 
-- (void)spreadsheetView:(MMSpreadsheetView *)spreadsheetView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)spreadsheetView:(MBSpreadsheetView *)spreadsheetView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
@@ -19,6 +21,10 @@
 @interface MBSpreadsheetView : MMSpreadsheetView
 
 @property (nonatomic, weak) id<MBSpreadsheetViewDelegate> delegate;
-@property (nonatomic, assign) NSInteger selectedRow;
+
+@property (nonatomic) NSInteger selectedRow;
+@property (nonatomic) CGPoint contentOffset;
+
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
 
 @end
