@@ -2,8 +2,8 @@
 //  MBSpreadsheetView.m
 //  MMSpreadsheetView
 //
-//  Created by Robert Nadin on 09/11/2013.
-//  Copyright (c) 2013 TMTI Limited. All rights reserved.
+//  Created by Rob Nadin on 09/11/2013.
+//  Copyright (c) 2013 Rob Nadin. All rights reserved.
 //
 
 #import "MBSpreadsheetView.h"
