@@ -938,6 +938,13 @@ const static NSUInteger MMScrollIndicatorTag = 12345;
     }
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (!decelerate) {
+        [self setNeedsLayout];
+        [self hideScrollIndicators];
+    }
+}
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [self scrollViewDidStop:scrollView];
 }
