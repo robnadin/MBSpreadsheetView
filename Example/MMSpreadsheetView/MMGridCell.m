@@ -21,11 +21,9 @@
 #import "MMGridCell.h"
 
 @interface MMGridCell ()
-{
-    UIColor *_normalTextColor;
-}
 
-@property (nonatomic, strong) UIColor *selectedTextColor;
+@property (nonatomic) UIColor *normalTextColor;
+@property (nonatomic) UIColor *selectedTextColor;
 
 @end
 
@@ -43,26 +41,23 @@
         _textLabel.textAlignment = NSTextAlignmentCenter;
         _textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _normalTextColor = _textLabel.textColor;
+        _selectedTextColor = [UIColor whiteColor];
         _selectedBackgroundColor = [UIColor lightGrayColor];
+        self.selectedBackgroundView = [[UIView alloc] init];
+        self.selectedBackgroundView.backgroundColor = _selectedBackgroundColor;
         [self.contentView addSubview:_textLabel];
     }
     return self;
 }
 
-- (void)setSelected:(BOOL)selected {
-    [super setSelected:selected];
-    if (selected) {
-        _textLabel.textColor = [UIColor whiteColor];
-        [self.contentView setBackgroundColor:_selectedBackgroundColor];
-    } else {
-        _textLabel.textColor = _normalTextColor;
-        [self.contentView setBackgroundColor:[UIColor clearColor]];
-    }
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    if (!self.selected) self.textLabel.textColor = highlighted ? self.selectedTextColor : self.normalTextColor;
 }
 
-- (void)setSelectedBackgroundColor:(UIColor *)selectedBackgroundColor
-{
-    _selectedBackgroundColor = selectedBackgroundColor;
+- (void)setSelected:(BOOL)selected {
+    [super setSelected:selected];
+    self.textLabel.textColor = selected ? self.selectedTextColor : self.normalTextColor;
 }
 
 @end
