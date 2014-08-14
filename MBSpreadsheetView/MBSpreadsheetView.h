@@ -13,6 +13,7 @@
 @protocol MBSpreadsheetViewDelegate <MMSpreadsheetViewDelegate>
 @optional
 
+- (void)spreadsheetViewDidScroll:(MBSpreadsheetView *)spreadsheetView;
 - (void)spreadsheetView:(MBSpreadsheetView *)spreadsheetView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

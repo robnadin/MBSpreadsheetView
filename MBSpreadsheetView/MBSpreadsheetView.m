@@ -147,4 +147,15 @@
     return CGSizeMake(width, height);
 }
 
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [super scrollViewDidScroll:scrollView];
+
+    if ([self.delegate respondsToSelector:@selector(spreadsheetViewDidScroll:)]) {
+        [self.delegate spreadsheetViewDidScroll:self];
+    }
+}
+
 @end
