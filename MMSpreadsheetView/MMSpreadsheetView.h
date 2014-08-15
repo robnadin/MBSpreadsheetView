@@ -207,6 +207,9 @@
  @warning An NSIndexPath category is provided so that *indexPath.mmSpreadsheetRow* represents a row and *indexPath.mmSpreadsheetColumn* represents a column.
  @warning as the number of cells shown increases, scrolling performance declines. A large grid (1000x1000) takes a long time to initialize, but if the cell sizes are large enough (150x150), scrolling performance is not affected. However, a small grid (50x50) of (20x20) cells basically doesn't scroll.
  */
+#ifdef IB_DESIGNABLE
+IB_DESIGNABLE
+#endif
 @interface MMSpreadsheetView : UIView
 
 ///---------------------------------------
@@ -220,14 +223,36 @@
  
  The delegate object is responsible for managing selection behavior and interactions with individual items.
  */
-@property (nonatomic, weak) id<MMSpreadsheetViewDelegate> delegate;
+@property (nonatomic, weak) IBOutlet id<MMSpreadsheetViewDelegate> delegate;
 
 /**
  The object that provides the data for the spreadsheet view.
  
  @discussion The data source must adopt the `MMSpreadsheetViewDataSource` protocol. The spreadsheet view maintains a weak reference to the data source object.
  */
-@property (nonatomic, weak) id<MMSpreadsheetViewDataSource> dataSource;
+@property (nonatomic, weak) IBOutlet id<MMSpreadsheetViewDataSource> dataSource;
+
+/**
+ The number of header rows.
+
+ @discussion The number of header columns in the spreadsheet. Setting this to a new value will re-initialize the view's subviews. The default value is 0.
+ */
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+@property (nonatomic, assign) IBInspectable NSUInteger headerRowCount;
+#else
+@property (nonatomic, assign) NSUInteger headerRowCount;
+#endif
+
+/**
+ The number of header columns.
+
+ @discussion The number of header rows in the spreadsheet. Setting this to a new value will re-initialize the view's subviews. The default value is 0.
+ */
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+@property (nonatomic, assign) IBInspectable NSUInteger headerColumnCount;
+#else
+@property (nonatomic, assign) NSUInteger headerColumnCount;
+#endif
 
 
 ///---------------------------------------
@@ -244,7 +269,7 @@
  @return An initialized spreadsheet view object or nil if the object could not be created.
  
  */
-- (id)initWithNumberOfHeaderRows:(NSUInteger)headerRowCount numberOfHeaderColumns:(NSUInteger)headerColumnCount frame:(CGRect)frame;
+- (instancetype)initWithNumberOfHeaderRows:(NSUInteger)headerRowCount numberOfHeaderColumns:(NSUInteger)headerColumnCount frame:(CGRect)frame;
 
 /**
  Register a class for use in creating new spreadsheet view cells.
@@ -322,14 +347,22 @@
  
  @discussion The default value is YES. The indicator is visible while tracking is underway and fades out after tracking.
  */
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+@property (nonatomic, assign) IBInspectable BOOL showsHorizontalScrollIndicator;
+#else
 @property (nonatomic, assign) BOOL showsHorizontalScrollIndicator;
+#endif
 
 /**
  A Boolean value that controls whether the vertical scroll indicator is visible.
  
  @discussion The default value is YES. The indicator is visible while tracking is underway and fades out after tracking.
  */
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+@property (nonatomic, assign) IBInspectable BOOL showsVerticalScrollIndicator;
+#else
 @property (nonatomic, assign) BOOL showsVerticalScrollIndicator;
+#endif
 
 /**
  Displays the scroll indicators momentarily.
@@ -347,6 +380,10 @@
  
  @discussion If the value of this property is YES, the spreadsheet view bounces when it encounters a boundary of the content. Bouncing visually indicates that scrolling has reached an edge of the content. If the value is NO, scrolling stops immediately at the content boundary without bouncing. The default value is YES.
  */
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+@property (nonatomic, assign) IBInspectable BOOL bounces;
+#else
 @property (nonatomic, assign) BOOL bounces;
+#endif
 
 @end

@@ -46,8 +46,6 @@ const static NSUInteger MMScrollIndicatorTag = 12345;
 
 @interface MMSpreadsheetView () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, assign) NSUInteger headerRowCount;
-@property (nonatomic, assign) NSUInteger headerColumnCount;
 @property (nonatomic, assign) MMSpreadsheetHeaderConfiguration spreadsheetHeaderConfiguration;
 @property (nonatomic, strong) UIScrollView *controllingScrollView;
 
@@ -76,42 +74,42 @@ const static NSUInteger MMScrollIndicatorTag = 12345;
 
 @implementation MMSpreadsheetView
 
-- (id)init {
+- (instancetype)init {
     return [self initWithNumberOfHeaderRows:0 numberOfHeaderColumns:0 frame:CGRectZero];
 }
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     return [self initWithNumberOfHeaderRows:0 numberOfHeaderColumns:0 frame:frame];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self spreadsheetViewCommonInitWithNumberOfHeaderRows:0 numberOfHeaderColumns:0];
+    }
+    return self;
 }
 
 #pragma mark - MMSpreadsheetView designated initializer
 
-- (id)initWithNumberOfHeaderRows:(NSUInteger)headerRowCount numberOfHeaderColumns:(NSUInteger)headerColumnCount frame:(CGRect)frame {
+- (instancetype)initWithNumberOfHeaderRows:(NSUInteger)headerRowCount numberOfHeaderColumns:(NSUInteger)headerColumnCount frame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _scrollIndicatorInsets = UIEdgeInsetsZero;
-        _showsVerticalScrollIndicator = YES;
-        _showsHorizontalScrollIndicator = YES;
-        _headerRowCount = headerRowCount;
-        _headerColumnCount = headerColumnCount;
-        
-        if (headerColumnCount == 0 && headerRowCount == 0) {
-            _spreadsheetHeaderConfiguration = MMSpreadsheetHeaderConfigurationNone;
-        }
-        else if (headerColumnCount > 0 && headerRowCount == 0) {
-            _spreadsheetHeaderConfiguration = MMSpreadsheetHeaderConfigurationColumnOnly;
-        }
-        else if (headerColumnCount == 0 && headerRowCount > 0) {
-            _spreadsheetHeaderConfiguration = MMSpreadsheetHeaderConfigurationRowOnly;
-        }
-        else if (headerColumnCount > 0 && headerRowCount > 0) {
-            _spreadsheetHeaderConfiguration = MMSpreadsheetHeaderConfigurationBoth;
-        }
-        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        self.backgroundColor = [UIColor grayColor];
-        [self setupSubviews];
+        [self spreadsheetViewCommonInitWithNumberOfHeaderRows:headerRowCount numberOfHeaderColumns:headerColumnCount];
     }
     return self;
+}
+
+- (void)spreadsheetViewCommonInitWithNumberOfHeaderRows:(NSUInteger)headerRowCount numberOfHeaderColumns:(NSUInteger)headerColumnCount {
+    _scrollIndicatorInsets = UIEdgeInsetsZero;
+    _showsVerticalScrollIndicator = YES;
+    _showsHorizontalScrollIndicator = YES;
+    _headerRowCount = headerRowCount;
+    _headerColumnCount = headerColumnCount;
+
+    self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.backgroundColor = [UIColor grayColor];
+    [self setupSubviews];
 }
 
 #pragma mark - Public Functions
@@ -153,7 +151,28 @@ const static NSUInteger MMScrollIndicatorTag = 12345;
 
 #pragma mark - View Setup functions
 
+- (void)setupHeaderConfiguration {
+    if (self.headerColumnCount == 0 && self.headerRowCount == 0) {
+        _spreadsheetHeaderConfiguration = MMSpreadsheetHeaderConfigurationNone;
+    }
+    else if (self.headerColumnCount > 0 && self.headerRowCount == 0) {
+        _spreadsheetHeaderConfiguration = MMSpreadsheetHeaderConfigurationColumnOnly;
+    }
+    else if (self.headerColumnCount == 0 && self.headerRowCount > 0) {
+        _spreadsheetHeaderConfiguration = MMSpreadsheetHeaderConfigurationRowOnly;
+    }
+    else if (self.headerColumnCount > 0 && self.headerRowCount > 0) {
+        _spreadsheetHeaderConfiguration = MMSpreadsheetHeaderConfigurationBoth;
+    }
+}
+
 - (void)setupSubviews {
+    [self setupHeaderConfiguration];
+
+    for (UIView *view in self.subviews) {
+        [view removeFromSuperview];
+    }
+
     switch (self.spreadsheetHeaderConfiguration) {
         case MMSpreadsheetHeaderConfigurationNone:
             [self setupLowerRightView];
@@ -426,6 +445,22 @@ const static NSUInteger MMScrollIndicatorTag = 12345;
                                 layout:layout
                 sizeForItemAtIndexPath:indexPathZero];
     layout.itemSize = size;
+}
+
+#pragma mark - Header property setters
+
+- (void)setHeaderRowCount:(NSUInteger)headerRowCount {
+    if (self.headerRowCount != headerRowCount) {
+        _headerRowCount = headerRowCount;
+        [self setupSubviews];
+    }
+}
+
+- (void)setHeaderColumnCount:(NSUInteger)headerColumnCount {
+    if (self.headerColumnCount != headerColumnCount) {
+        _headerColumnCount = headerColumnCount;
+        [self setupSubviews];
+    }
 }
 
 #pragma mark - Scroll Indicator
