@@ -26,6 +26,7 @@
 
 @property (nonatomic) NSInteger selectedRow;
 @property (nonatomic) CGPoint contentOffset;
+@property (nonatomic, readonly) CGSize contentSize;
 
 - (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
 
