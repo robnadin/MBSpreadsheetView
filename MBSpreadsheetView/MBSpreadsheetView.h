@@ -15,6 +15,7 @@
 
 - (void)spreadsheetViewDidScroll:(MBSpreadsheetView *)spreadsheetView;
 - (void)spreadsheetView:(MBSpreadsheetView *)spreadsheetView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)spreadsheetView:(MBSpreadsheetView *)spreadsheetView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 

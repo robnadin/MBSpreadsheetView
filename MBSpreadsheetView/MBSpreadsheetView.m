@@ -11,6 +11,9 @@
 
 @interface MMSpreadsheetView (Private) <UICollectionViewDataSource, UICollectionViewDelegate>
 
+@property (nonatomic, assign) NSUInteger headerRowCount;
+
+@property (nonatomic, strong) UICollectionView *upperLeftCollectionView;
 @property (nonatomic, strong) UICollectionView *upperRightCollectionView;
 @property (nonatomic, strong) UICollectionView *lowerLeftCollectionView;
 @property (nonatomic, strong) UICollectionView *lowerRightCollectionView;
@@ -23,8 +26,6 @@
 
 @interface MBSpreadsheetView () <UICollectionViewDelegate>
 
-@property (nonatomic, strong) UICollectionView *selectedItemCollectionView;
-@property (nonatomic, strong) NSIndexPath *selectedItemIndexPath;
 
 @end
 
@@ -36,7 +37,7 @@
 - (id)initWithNumberOfHeaderRows:(NSUInteger)headerRowCount numberOfHeaderColumns:(NSUInteger)headerColumnCount frame:(CGRect)frame
 {
     if (self = [super initWithNumberOfHeaderRows:headerRowCount numberOfHeaderColumns:headerColumnCount frame:frame]) {
-        _selectedRow = -1;
+        _selectedRow = NSNotFound;
     }
     return self;
 }
@@ -47,6 +48,7 @@
 {
     [super setupSubviews];
     
+    self.lowerLeftCollectionView.allowsMultipleSelection = YES;
     self.lowerRightCollectionView.allowsMultipleSelection = YES;
 }
 
@@ -57,46 +59,92 @@
     return [super dataSourceIndexPathFromCollectionView:collectionView indexPath:indexPath];
 }
 
+- (void)collectionView:(UICollectionView *)collectionView selectRow:(NSInteger)row animated:(BOOL)animated
+{
+    NSInteger columnCount = [self collectionView:collectionView numberOfItemsInSection:0];
+    for (NSInteger column = 0; column < columnCount; column++) {
+        NSIndexPath *cellPath = [NSIndexPath indexPathForItem:column inSection:row];
+        [collectionView selectItemAtIndexPath:cellPath
+                                     animated:animated
+                               scrollPosition:UICollectionViewScrollPositionNone];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView deselectRow:(NSInteger)row animated:(BOOL)animated
+{
+    NSInteger columnCount = [self collectionView:collectionView numberOfItemsInSection:0];
+    for (NSInteger column = 0; column < columnCount; column++) {
+        NSIndexPath *cellPath = [NSIndexPath indexPathForItem:column inSection:row];
+        [collectionView deselectItemAtIndexPath:cellPath
+                                       animated:animated];
+    }
+}
+
 #pragma mark - UICollectionViewDataSource pass-through
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [super collectionView:collectionView cellForItemAtIndexPath:indexPath];
-    
-    if (indexPath.mmSpreadsheetRow == self.selectedRow) {
-        cell.selected = YES;
-    }
-    
-    return cell;
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [super collectionView:collectionView cellForItemAtIndexPath:indexPath];
 }
 
 #pragma mark - UICollectionViewDelegate
 
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES; // TODO: temp
+
+    if (collectionView != self.lowerLeftCollectionView)
+        return YES;
+
+    return indexPath.mmSpreadsheetRow != self.selectedRow;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [super collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+    NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView indexPath:indexPath];
+    if (dataSourceIndexPath.mmSpreadsheetRow < self.headerRowCount)
+        [super collectionView:collectionView didSelectItemAtIndexPath:indexPath];
 
-    if (collectionView == self.lowerLeftCollectionView ||
-        collectionView == self.lowerRightCollectionView) {
+    if (indexPath.mmSpreadsheetRow == self.selectedRow)
+        return;
+
+    if (dataSourceIndexPath.mmSpreadsheetRow - indexPath.mmSpreadsheetRow > 0) {
+        [self collectionView:self.lowerLeftCollectionView deselectRow:self.selectedRow animated:NO];
+        [self collectionView:self.lowerRightCollectionView deselectRow:self.selectedRow animated:NO];
+
+        if (self.selectedRow != NSNotFound) {
+            NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForItem:0 inSection:self.selectedRow];
+            NSIndexPath *dataSourceSelectedIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
+                                                                                         indexPath:selectedIndexPath];
+            if ([self.delegate respondsToSelector:@selector(spreadsheetView:didDeselectRowAtIndexPath:)]) {
+                [self.delegate spreadsheetView:self didDeselectRowAtIndexPath:dataSourceSelectedIndexPath];
+            }
+        }
+
         self.selectedRow = indexPath.mmSpreadsheetRow;
-        
-        for (NSIndexPath *cellPath in [self.lowerLeftCollectionView indexPathsForVisibleItems]) {
-            if (cellPath.mmSpreadsheetRow == indexPath.mmSpreadsheetRow) {
-                [self.lowerLeftCollectionView selectItemAtIndexPath:cellPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-            }
-        }
-        
-        for (NSIndexPath *cellPath in [self.lowerRightCollectionView indexPathsForVisibleItems]) {
-            if (cellPath.mmSpreadsheetRow == indexPath.mmSpreadsheetRow) {
-                [self.lowerRightCollectionView selectItemAtIndexPath:cellPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-            }
-        }
-        
-        [self reloadData];
-        
-        NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView indexPath:indexPath];
+
+        [self collectionView:self.lowerLeftCollectionView selectRow:indexPath.mmSpreadsheetRow animated:NO];
+        [self collectionView:self.lowerRightCollectionView selectRow:indexPath.mmSpreadsheetRow animated:NO];
+
         if ([self.delegate respondsToSelector:@selector(spreadsheetView:didSelectRowAtIndexPath:)]) {
             [self.delegate spreadsheetView:self didSelectRowAtIndexPath:dataSourceIndexPath];
         }
+    }
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView indexPath:indexPath];
+    if (dataSourceIndexPath.mmSpreadsheetRow < self.headerRowCount)
+        return;
+
+    if ([self.delegate respondsToSelector:@selector(spreadsheetView:didDeselectRowAtIndexPath:)]) {
+        [self.delegate spreadsheetView:self didDeselectRowAtIndexPath:dataSourceIndexPath];
     }
 }
     
