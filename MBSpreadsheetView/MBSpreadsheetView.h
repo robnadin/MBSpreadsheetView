@@ -14,6 +14,8 @@
 @optional
 
 - (void)spreadsheetViewDidScroll:(MBSpreadsheetView *)spreadsheetView;
+- (void)spreadsheetView:(MBSpreadsheetView *)spreadsheetView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)spreadsheetView:(MBSpreadsheetView *)spreadsheetView didUnhighlightRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)spreadsheetView:(MBSpreadsheetView *)spreadsheetView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)spreadsheetView:(MBSpreadsheetView *)spreadsheetView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath;
 
