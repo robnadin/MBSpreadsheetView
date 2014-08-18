@@ -49,6 +49,20 @@ typedef NS_ENUM(NSUInteger, MBSpreadsheetViewRowAction) {
     return self;
 }
 
+#pragma mark - Public Functions
+
+- (void)deselectRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated
+{
+    if (self.lowerLeftCollectionView) {
+        [self collectionView:self.lowerLeftCollectionView performAction:MBSpreadsheetViewRowActionDeselect forRowAtIndexPath:indexPath];
+    }
+    if (self.lowerRightCollectionView) {
+        [self collectionView:self.lowerRightCollectionView performAction:MBSpreadsheetViewRowActionDeselect forRowAtIndexPath:indexPath];
+    }
+
+    self.selectedRow = NSNotFound;
+}
+
 #pragma mark - View Setup functions
 
 - (void)setupSubviews

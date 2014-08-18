@@ -31,5 +31,6 @@
 @property (nonatomic, readonly) CGSize contentSize;
 
 - (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
+- (void)deselectRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
 
 @end
