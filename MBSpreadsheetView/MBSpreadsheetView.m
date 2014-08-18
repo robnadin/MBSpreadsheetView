@@ -109,8 +109,12 @@
         return;
 
     if (dataSourceIndexPath.mmSpreadsheetRow - indexPath.mmSpreadsheetRow > 0) {
-        [self collectionView:self.lowerLeftCollectionView deselectRow:self.selectedRow animated:NO];
-        [self collectionView:self.lowerRightCollectionView deselectRow:self.selectedRow animated:NO];
+        if (self.lowerLeftCollectionView) {
+            [self collectionView:self.lowerLeftCollectionView deselectRow:self.selectedRow animated:NO];
+        }
+        if (self.lowerRightCollectionView) {
+            [self collectionView:self.lowerRightCollectionView deselectRow:self.selectedRow animated:NO];
+        }
 
         if (self.selectedRow != NSNotFound) {
             NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForItem:0 inSection:self.selectedRow];
@@ -123,8 +127,12 @@
 
         self.selectedRow = indexPath.mmSpreadsheetRow;
 
-        [self collectionView:self.lowerLeftCollectionView selectRow:indexPath.mmSpreadsheetRow animated:NO];
-        [self collectionView:self.lowerRightCollectionView selectRow:indexPath.mmSpreadsheetRow animated:NO];
+        if (self.lowerLeftCollectionView) {
+            [self collectionView:self.lowerLeftCollectionView selectRow:indexPath.mmSpreadsheetRow animated:NO];
+        }
+        if (self.lowerRightCollectionView) {
+            [self collectionView:self.lowerRightCollectionView selectRow:indexPath.mmSpreadsheetRow animated:NO];
+        }
 
         if ([self.delegate respondsToSelector:@selector(spreadsheetView:didSelectRowAtIndexPath:)]) {
             [self.delegate spreadsheetView:self didSelectRowAtIndexPath:dataSourceIndexPath];
